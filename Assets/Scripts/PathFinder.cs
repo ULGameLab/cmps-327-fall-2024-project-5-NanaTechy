@@ -58,7 +58,25 @@ public class PathFinder
             // You just need to fill code inside this foreach only
             foreach (Tile nextTile in current.tile.Adjacents)
             {
-                
+                Node neighbor = new Node(nextTile, 0, current, 0);
+                if (neighbor.tile == null || DoneList.Contains(neighbor)) { continue; }
+
+                // f value = current g value + h value;
+                neighbor.priority = current.costSoFar + HeuristicsDistance(neighbor.tile, goal);
+
+                if (neighbor.costSoFar == 0 || neighbor.priority < neighbor.costSoFar)
+                {
+                    // update g value
+                    neighbor.costSoFar = neighbor.priority;
+                    // update parent node
+                    neighbor.cameFrom = current;
+
+                    if (!TODOList.Contains(neighbor))
+                    {
+                        TODOList.Add(neighbor);
+                    }
+
+                }
             }
         }
         return new Queue<Tile>(); // Returns an empty Path if no path is found
@@ -92,7 +110,7 @@ public class PathFinder
             // Just increase the F cost of the enemy tile and the tiles around it by a certain ammount (say 30)
             foreach (Tile nextTile in current.tile.Adjacents)
             {
-
+                
             }
         }
         return new Queue<Tile>(); // Returns an empty Path
