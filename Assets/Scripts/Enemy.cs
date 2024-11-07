@@ -131,7 +131,27 @@ public class Enemy : MonoBehaviour
     // TODO: Enemy chases the player when it is nearby
     private void HandleEnemyBehavior2()
     {
-        
+        /*
+        switch(state)
+        {
+            case EnemyState.DEFAULT:
+
+                if (path.Count <= 0) path = pathFinder.RandomPath(currentTile, 20);
+
+                if (path.Count > 0)
+                {
+                    targetTile = path.Dequeue();
+                    state = EnemyState.MOVING;
+                }
+                break;
+
+            case EnemyState.MOVING:
+
+            default: 
+                state = EnemyState.DEFAULT;
+                break;
+
+        }*/
     }
 
     // TODO: Third behavior (Describe what it does)
