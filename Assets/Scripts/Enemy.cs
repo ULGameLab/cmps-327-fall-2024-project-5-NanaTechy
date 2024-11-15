@@ -120,8 +120,8 @@ public class Enemy : MonoBehaviour
                     currentTile = targetTile;
                     state = EnemyState.DEFAULT;
                 }
-
                 break;
+
             default:
                 state = EnemyState.DEFAULT;
                 break;
@@ -131,8 +131,78 @@ public class Enemy : MonoBehaviour
     // TODO: Enemy chases the player when it is nearby
     private void HandleEnemyBehavior2()
     {
-        /*
-        switch(state)
+        switch(state) 
+        {
+            case EnemyState.DEFAULT:
+
+                material.color = Color.cyan;
+
+                if (path.Count <= 0) path = pathFinder.RandomPath(currentTile, 20);
+
+                if (path.Count > 0)
+                {
+                    targetTile = path.Dequeue();
+                    state = EnemyState.MOVING;
+                }
+                
+                break;
+
+            case EnemyState.MOVING:
+                // move
+                velocity = targetTile.gameObject.transform.position - transform.position;
+                transform.position = transform.position + (velocity.normalized * speed) * Time.deltaTime;
+
+                // if target tile is reached
+                if (Vector3.Distance(transform.position, targetTile.gameObject.transform.position) <= 0.05f)
+                {
+                    // update tile
+                    currentTile = targetTile;
+                    // update counter
+                    playerCloseCounter--;
+                    state = EnemyState.DEFAULT;
+                }
+
+                if (playerCloseCounter <= 0)
+                {
+                    // if player is close, reset counter
+                    playerCloseCounter = maxCounter;
+                }
+
+                if (playerCloseCounter > 0)
+                {
+                    // if player is in the vision radius, chase player
+                    if (Vector3.Distance(playerGameObject.gameObject.transform.position, transform.position) < visionDistance)
+                    {
+                        targetTile = playerGameObject.GetComponent<Player>().currentTile;
+                        path.Clear();
+                        state = EnemyState.CHASE;
+                    }
+                }
+                else { state = EnemyState.DEFAULT; }
+                break;
+            case EnemyState.CHASE:
+
+                if (path.Count <= 0)
+                {
+                    path = pathFinder.FindPathAStar(currentTile, targetTile);
+                    playerCloseCounter = 0;
+                }
+
+                if (path.Count > 0) targetTile = path.Dequeue();
+                else { state = EnemyState.DEFAULT; break; }
+                state = EnemyState.MOVING;
+                break;
+            default: 
+                state = EnemyState.DEFAULT;
+                break;
+
+        }
+    }
+
+    // TODO: Enemy chases the player when it is nearby, however it stops 2 tiles away
+    private void HandleEnemyBehavior3()
+    {
+        switch (state)
         {
             case EnemyState.DEFAULT:
 
@@ -143,20 +213,62 @@ public class Enemy : MonoBehaviour
                     targetTile = path.Dequeue();
                     state = EnemyState.MOVING;
                 }
+
                 break;
 
             case EnemyState.MOVING:
+                // move
+                if (Vector3.Distance(transform.position, playerGameObject.gameObject.transform.position) > 2.0f)
+                {
+                    velocity = targetTile.gameObject.transform.position - transform.position;
+                    transform.position = transform.position + (velocity.normalized * speed) * Time.deltaTime;
+                }
 
-            default: 
+                // if target tile is reached
+                if (Vector3.Distance(transform.position, targetTile.gameObject.transform.position) <= 0.05f)
+                {
+                    // update tile
+                    currentTile = targetTile;
+                    // update counter
+                    playerCloseCounter--;
+                    state = EnemyState.DEFAULT;
+                }
+
+                if (playerCloseCounter <= 0)
+                {
+                    // if player is close, reset counter
+                    playerCloseCounter = maxCounter;
+                }
+
+                if (playerCloseCounter > 0)
+                {
+                    // if player is in the vision radius, chase player
+                    if (Vector3.Distance(playerGameObject.gameObject.transform.position, transform.position) < visionDistance)
+                    {
+                        targetTile = playerGameObject.GetComponent<Player>().currentTile;
+                        path.Clear();
+                        state = EnemyState.CHASE;
+                    }
+                }
+                else { state = EnemyState.DEFAULT; }
+                break;
+
+            case EnemyState.CHASE:
+
+                if (path.Count <= 0)
+                {
+                    path = pathFinder.FindPathAStar(currentTile, targetTile);
+                    playerCloseCounter = 0;
+                }
+
+                if (path.Count > 0) targetTile = path.Dequeue();
+                else { state = EnemyState.DEFAULT; break; }
+                state = EnemyState.MOVING;
+                break;
+            default:
                 state = EnemyState.DEFAULT;
                 break;
 
-        }*/
-    }
-
-    // TODO: Third behavior (Describe what it does)
-    private void HandleEnemyBehavior3()
-    {
-
+        }
     }
 }

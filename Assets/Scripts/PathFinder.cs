@@ -58,35 +58,17 @@ public class PathFinder
             // You just need to fill code inside this foreach only
             foreach (Tile nextTile in current.tile.Adjacents)
             {
-                
                 Node neighbor = new Node(nextTile, 0, current, 0);
-                if (neighbor.tile == null || DoneList.Contains(neighbor)) { continue; }
-
-                // f value = current g value + h value;
-                double cost = current.costSoFar + HeuristicsDistance(neighbor.tile, goal);
+                double cost = current.costSoFar + HeuristicsDistance(current.tile, nextTile);
+                neighbor.costSoFar = cost;
+                neighbor.priority = cost + HeuristicsDistance(nextTile,goal);
                 
-                if (TODOList.Contains(neighbor) && neighbor.priority < neighbor.costSoFar) 
-                {
-                    TODOList.Remove(neighbor);
-                }
+                if (DoneList.Contains(neighbor)) { continue; };
 
-                if (DoneList.Contains(neighbor) && neighbor.priority < neighbor.costSoFar)
+                if (!DoneList.Contains(neighbor) && !TODOList.Contains(neighbor))
                 {
-                    DoneList.Remove(neighbor);
-                }
-                 
-                if (!TODOList.Contains(neighbor) && !DoneList.Contains(neighbor))
-                {
-                    // update g value
-                    neighbor.costSoFar = cost;
-                    // update parent node
-                    neighbor.cameFrom = current;
-                    // set priority queue rank
-                    neighbor.priority = neighbor.costSoFar + HeuristicsDistance(neighbor.tile,goal);
-                    // add neighbor to TODOList
-                    TODOList.Add(neighbor);
-                    
-                }
+                    TODOList.Add(neighbor);}
+                
             }
         }
         return new Queue<Tile>(); // Returns an empty Path if no path is found
